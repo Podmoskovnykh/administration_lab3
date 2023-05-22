@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+ app:
+   build: .
+   ports:
+     - "8000:8000"
+   depends_on:
+     - mongodb
+     - postgres
+   env_file:
+     - .env
+ mongodb:
+   image: "mongo:latest"
+   ports:
+     - "27017:27017"
+   volumes:
+     - mongodb_data:/data/db
+   environment:
+     MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+ postgres:
+   image: "postgres:latest"
+   ports:
+     - "5432:5432"
+   volumes:
+     - postgres_data:/var/lib/postgresql/data
+     - ./config/postgres.conf:/etc/postgresql/postgresql.conf
+   environment:
+     POSTGRES_USER: postgres
+     POSTGRES_PASSWORD: 123
+     POSTGRES_DB: employees_db
+volumes:
+ mongodb_data:
+ postgres_data:
